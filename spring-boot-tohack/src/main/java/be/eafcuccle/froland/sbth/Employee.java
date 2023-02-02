@@ -14,7 +14,7 @@ public class Employee {
 
   private String password;
 
-  protected Employee() {};
+  protected Employee() {}
 
   public Employee(String login, String password) {
     this.login = login;
