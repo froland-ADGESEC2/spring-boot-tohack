@@ -105,7 +105,7 @@
     }
   },
   "waitFor": "onCreateCommand",
-  "updateContentCommand": "cd server && ./mvnw package dependency:sources && cd ../client && npm install",
+  "updateContentCommand": "cd spring-boot-tohack && ./mvnw package dependency:sources",
   "portsAttributes": {
     "5173": {
       "label": "Vite dev server",
