@@ -1,6 +1,6 @@
 {
   "name": "SpringBoot_React",
-  "image": "froland/java:latest",
+  "image": "froland/devcontainer-java:latest",
   "waitFor": "onCreateCommand",
   "updateContentCommand": "./mvnw -B dependency:go-offline dependency:sources package"
 }
