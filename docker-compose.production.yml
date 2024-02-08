@@ -1,6 +1,8 @@
 services:
   frontend:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.production
     depends_on:
       - db
     environment:
@@ -10,9 +12,6 @@ services:
       TZ: Europe/Brussels
     ports:
       - "8080:8080"
-    volumes:
-      - mavencache:/root/.m2
-      - ./:/workspace/app
   db:
     image: mysql:8
     environment:
@@ -26,5 +25,4 @@ services:
     volumes:
       - mysqldata:/var/lib/mysql
 volumes:
-  mavencache:
   mysqldata:
