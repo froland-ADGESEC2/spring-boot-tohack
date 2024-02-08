@@ -1,0 +1,24 @@
+services:
+  frontend:
+    build: ./
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/S2HACK
+      SPRING_DATASOURCE_USERNAME: s2hack_user
+      SPRING_DATASOURCE_PASSWORD: s2hack_password
+      TZ: Europe/Brussels
+    ports:
+      - "8080:8080"
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
+      MYSQL_DATABASE: S2HACK
+      MYSQL_USER: s2hack_user
+      MYSQL_PASSWORD: s2hack_password
+      TZ: Europe/Brussels
+    volumes:
+      - mysqldata:/var/lib/mysql
+volumes:
+  mysqldata:
