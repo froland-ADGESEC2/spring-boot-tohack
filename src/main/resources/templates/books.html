@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Liste de livres</title>
+</head>
+<body class="p-4">
+<main class="flex flex-col">
+  <h1 class="text-3xl text-sky-600 pb-4">Livres de <span th:text="${employee.login}"></span></h1>
+  <form class="flex flex-row pb-4 gap-2">
+    <input type="search" name="filter" class="border">
+    <input type="submit" value="Filtrer" class="border border-neutral-400 rounded bg-neutral-200 px-2">
+  </form>
+  <table class="table-auto w-1/2 border-collapse">
+    <thead>
+    <tr class="bg-sky-100">
+      <th class="text-left border">Auteur</th>
+      <th class="text-left border">Titre</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${books}">
+      <td class="border" th:text="${book.author}"></td>
+      <td class="border" th:text="${book.title}"></td>
+    </tr>
+    </tbody>
+  </table>
+</main>
+</body>
+</html>
