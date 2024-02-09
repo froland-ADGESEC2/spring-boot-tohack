@@ -1,0 +1,16 @@
+services:
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
+      MYSQL_DATABASE: s2hack
+      MYSQL_USER: s2hack_user
+      MYSQL_PASSWORD: s2hack_password
+      TZ: Europe/Brussels
+    ports:
+      - 3306:3306
+    volumes:
+      - mysqldata:/var/lib/mysql
+volumes:
+  mavencache:
+  mysqldata:
