@@ -1,13 +1,14 @@
 package be.eafcuccle.froland.sbth;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
+@Table(name = "Employee", uniqueConstraints = {
+  @UniqueConstraint(name = "uc_employee_login", columnNames = {"login"})
+})
 public class Employee {
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
 
   private String login;
