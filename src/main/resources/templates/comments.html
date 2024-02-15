@@ -18,7 +18,7 @@
     <div class="border rounded p-2" th:utext="${comment.content}"></div>
     <p class="text-neutral-400 pb-1">
       <span th:text="${#temporals.format(comment.creationTimestamp, 'dd/MM/yyyy HH:mm:ss')}"></span> -
-      <span th:text="${comment.author.login}"></span>
+      <span th:text="${comment.author?.login}"></span>
     </p>
   </article>
 </main>

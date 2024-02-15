@@ -11,7 +11,10 @@
     <h1 class="text-3xl text-sky-600">Page d'accueil</h1>
     <p>Welcome!</p>
     <div th:if="${employee != null}">
-      <a th:href="@{/books/{id}(id=${employee.id})}">View My Books</a>
+      <ul class="ml-4 p-2">
+        <li><a class="underline" th:href="@{/books/{id}(id=${employee.id})}">Lister mes livres</a></li>
+        <li><a class="underline" th:href="@{/comments}">Consulter les commentaires</a></li>
+      </ul>
     </div>
   </body>
 </html>
