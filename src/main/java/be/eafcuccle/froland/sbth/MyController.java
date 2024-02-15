@@ -4,6 +4,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import java.util.List;
 
+import jakarta.persistence.TypedQuery;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -39,10 +42,10 @@ public class MyController {
   }
 
   @PostMapping("/login")
-  public String checkLogin(@RequestParam String login, @RequestParam String password, Model model, HttpSession session) {
+  public String checkLogin(@RequestParam String login, @RequestParam String password, Model model, HttpSession session, HttpServletResponse response) {
     session.removeAttribute("employee");
-    Query q = em.createQuery(
-        "SELECT e FROM Employee e WHERE e.login='" + login + "' AND e.password='" + password + "'");
+    TypedQuery<Employee> q = em.createQuery(
+        "SELECT e FROM Employee e WHERE e.login='" + login + "' AND e.password='" + password + "'", Employee.class);
     List<Employee> foundEmployees = q.getResultList();
     if (foundEmployees.isEmpty()) {
       return "redirect:/failure";
@@ -50,18 +53,20 @@ public class MyController {
       Employee foundEmployee = foundEmployees.get(0);
       session.setAttribute("employee", foundEmployee);
       model.addAttribute("employee", foundEmployee);
+      response.addCookie(new Cookie("secret-cookie", "my-very-secret-cookie"));
       return "success";
     }
   }
 
   @GetMapping("/books/{employeeId}")
-  public String books(Model model, @PathVariable Integer employeeId) {
+  public String books(Model model, @PathVariable Integer employeeId, @RequestParam(required = false) String filter) {
     Query employeeQuery = em.createQuery("SELECT e FROM Employee e WHERE e.id=" + employeeId);
     Employee employee = (Employee) employeeQuery.getSingleResult();
     model.addAttribute("employee", employee);
-    Query bookQuery = em.createQuery("SELECT b FROM Book b WHERE b.owner.id=" + employeeId);
+    TypedQuery<Book> bookQuery = em.createQuery("SELECT b FROM Book b WHERE b.owner.id=" + employeeId, Book.class);
     List<Book> books = bookQuery.getResultList();
     model.addAttribute("books", books);
+    model.addAttribute("filter", filter);
     return "books";
   }
 }

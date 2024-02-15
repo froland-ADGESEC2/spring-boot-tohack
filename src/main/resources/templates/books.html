@@ -8,12 +8,13 @@
   <title>Liste de livres</title>
 </head>
 <body class="p-4">
-<main class="flex flex-col">
-  <h1 class="text-3xl text-sky-600 pb-4">Livres de <span th:text="${employee.login}"></span></h1>
+<main class="flex flex-col gap-4">
+  <h1 class="text-3xl text-sky-600">Livres de <span th:text="${employee.login}"></span></h1>
   <form class="flex flex-row pb-4 gap-2">
     <input type="search" name="filter" class="border">
     <input type="submit" value="Filtrer" class="border border-neutral-400 rounded bg-neutral-200 px-2">
   </form>
+  <p th:if="${!#strings.isEmpty(filter)}">Text recherché&nbsp;: <span th:utext="${filter}"></span></p>
   <table class="table-auto w-1/2 border-collapse">
     <thead>
     <tr class="bg-sky-100">
