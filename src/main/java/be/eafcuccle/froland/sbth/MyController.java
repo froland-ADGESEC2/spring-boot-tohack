@@ -9,17 +9,17 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class MyController {
   @Autowired
   private EntityManager em;
+  @Autowired
+  private CommentRepository commentRepository;
 
   @GetMapping("/")
   public String homePage(HttpSession session, Model model) {
@@ -68,5 +68,20 @@ public class MyController {
     model.addAttribute("books", books);
     model.addAttribute("filter", filter);
     return "books";
+  }
+
+  @GetMapping("/comments")
+  public String listComments(Model model) {
+    List<Comment> allComments = commentRepository.findAll(Sort.by("creationTimestamp").descending());
+    model.addAttribute("comments", allComments);
+    return "comments";
+  }
+
+  @PostMapping("/comments")
+  public String addComment(@RequestParam String content, HttpSession session) {
+    Employee employee = (Employee) session.getAttribute("employee");
+    Comment comment = new Comment(employee, content);
+    commentRepository.save(comment);
+    return "redirect:/comments";
   }
 }

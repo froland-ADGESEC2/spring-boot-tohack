@@ -13,10 +13,13 @@ public class DataPopulator implements CommandLineRunner {
 
   @Autowired
   private BookRepository bookRepository;
+  @Autowired
+  private CommentRepository commentRepository;
 
   @Override
   public void run(String... args) throws Exception {
     bookRepository.deleteAll();
+    commentRepository.deleteAll();
     employeeRepository.deleteAll();
 
     Employee admin = employeeRepository.save(new Employee("admin", "admin123"));
@@ -37,6 +40,13 @@ public class DataPopulator implements CommandLineRunner {
       new Book("Raoul-Gabriel Urma, Mario Fusco, Alan Mycroft", "Java 8 in Action", user3),
       new Book("Cay S. Horstmann", "Core Java Volume I–Fundamentals", user3),
       new Book("Bruce Eckel", "Thinking in Java", user3)
+    ));
+
+    commentRepository.saveAll(List.of(
+      new Comment(admin, "This is a great book!"),
+      new Comment(user1, "I love this book!"),
+      new Comment(user2, "I hate this book!"),
+      new Comment(user3, "I don't like this book!")
     ));
   }
 
