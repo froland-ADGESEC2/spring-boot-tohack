@@ -2,8 +2,6 @@ package be.eafcuccle.froland.sbth;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
-import java.util.List;
-
 import jakarta.persistence.TypedQuery;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,7 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller
 public class MyController {
@@ -45,7 +48,7 @@ public class MyController {
   public String checkLogin(@RequestParam String login, @RequestParam String password, Model model, HttpSession session, HttpServletResponse response) {
     session.removeAttribute("employee");
     TypedQuery<Employee> q = em.createQuery(
-        "SELECT e FROM Employee e WHERE e.login='" + login + "' AND e.password='" + password + "'", Employee.class);
+      "SELECT e FROM Employee e WHERE e.login='" + login + "' AND e.password='" + password + "'", Employee.class);
     List<Employee> foundEmployees = q.getResultList();
     if (foundEmployees.isEmpty()) {
       return "redirect:/failure";
@@ -63,7 +66,22 @@ public class MyController {
     Query employeeQuery = em.createQuery("SELECT e FROM Employee e WHERE e.id=" + employeeId);
     Employee employee = (Employee) employeeQuery.getSingleResult();
     model.addAttribute("employee", employee);
-    TypedQuery<Book> bookQuery = em.createQuery("SELECT b FROM Book b WHERE b.owner.id=" + employeeId, Book.class);
+    String jpqlQuery;
+    if (filter == null || filter.isBlank()) {
+      jpqlQuery = """
+        SELECT b
+        FROM Book b
+        WHERE b.owner.id = %d
+        """.formatted(employeeId);
+    } else {
+      jpqlQuery = """
+        SELECT b
+        FROM Book b
+        WHERE b.owner.id = %d
+        AND b.title LIKE '%%%s%%'
+        """.formatted(employeeId, filter);
+    }
+    TypedQuery<Book> bookQuery = em.createQuery(jpqlQuery, Book.class);
     List<Book> books = bookQuery.getResultList();
     model.addAttribute("books", books);
     model.addAttribute("filter", filter);
